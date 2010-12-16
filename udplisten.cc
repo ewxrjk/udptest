@@ -26,6 +26,8 @@ int bindto(const char *dev) {
   const int one = 1;
   if(setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &one, sizeof one) < 0)
     fatal("setsockopt SO_REUSEADDR");
+  if(setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &one, sizeof one) < 0)
+    fatal("setsockopt SO_BROADCAST");
   if(dev && *dev) {
     if(setsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE, dev, strlen(dev)) < 0)
       fatal("setsockopt SO_BINDTODEVICE %s", dev);

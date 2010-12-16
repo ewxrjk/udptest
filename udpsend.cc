@@ -33,9 +33,11 @@ int main(int argc, char **argv) {
   int fd = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
   if(fd < 0)
     fatal("socket");
-  if(connect(fd, res->ai_addr, res->ai_addrlen) < 0)
-    fatal("connect");
-  if(write(fd, argv[3], strlen(argv[3]) + 1) < 0)
-    fatal("write");
+  const int one = 1;
+  if(setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &one, sizeof one) < 0)
+    fatal("setsockopt SO_BROADCAST");
+  if(sendto(fd, argv[3], strlen(argv[3]) + 1, 0,
+            res->ai_addr, res->ai_addrlen) < 0)
+    fatal("sendto");
   return 0;
 }
