@@ -29,7 +29,7 @@ int bindto(const char *dev) {
   if(setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &one, sizeof one) < 0)
     fatal("setsockopt SO_BROADCAST");
   if(dev && *dev) {
-    if(setsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE, dev, strlen(dev)) < 0)
+    if(setsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE, dev, strlen(dev) + 1) < 0)
       fatal("setsockopt SO_BINDTODEVICE %s", dev);
   }
   memset(&addr, 0, sizeof addr);
