@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
   hints.ai_family = AF_UNSPEC;
   hints.ai_socktype = SOCK_DGRAM;
   hints.ai_protocol = IPPROTO_UDP;
-  hints.ai_flags = 0;
+  hints.ai_flags = AI_V4MAPPED|AI_ADDRCONFIG;
   int rc = getaddrinfo(argv[1], argv[2], &hints, &res);
   if(rc)
     fatal("getaddrinfo: %s", gai_strerror(rc));

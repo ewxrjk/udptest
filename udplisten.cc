@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
         if(len < 0)
           fatal("recv (%s)", argv[n]);
         buffer[len] = 0;
-        printf("%s: %s\n", argv[0], buffer);
+        printf("%s: %s\n", argv[n], buffer);
       }
     }
   }
