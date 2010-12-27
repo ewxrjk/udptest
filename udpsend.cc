@@ -19,8 +19,8 @@ static void fatal(const char *s, ...) {
 }
 
 int main(int argc, char **argv) {
-  if(argc != 4)
-    fatal("usage: udpsend HOST PORT MESSAGE");
+  if(argc < 4 || argc > 5)
+    fatal("usage: udpsend HOST PORT MESSAGE [REPEATS]");
   struct addrinfo hints, *res;
   memset(&hints, 0, sizeof hints);
   hints.ai_family = AF_UNSPEC;
@@ -36,8 +36,13 @@ int main(int argc, char **argv) {
   const int one = 1;
   if(setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &one, sizeof one) < 0)
     fatal("setsockopt SO_BROADCAST");
-  if(sendto(fd, argv[3], strlen(argv[3]) + 1, 0,
-            res->ai_addr, res->ai_addrlen) < 0)
-    fatal("sendto");
+  int repeats = 1;
+  if(argc > 4)
+    repeats = atoi(argv[4]);
+  for(int n = 0; n < repeats; ++n) {
+    if(sendto(fd, argv[3], strlen(argv[3]) + 1, 0,
+	      res->ai_addr, res->ai_addrlen) < 0)
+      fatal("sendto[%d]", n);
+  }
   return 0;
 }
