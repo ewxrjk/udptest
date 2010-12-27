@@ -29,8 +29,12 @@ int bindto(const char *dev) {
   if(setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &one, sizeof one) < 0)
     fatal("setsockopt SO_BROADCAST");
   if(dev && *dev) {
+#ifdef SO_BINDTODEVICE
     if(setsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE, dev, strlen(dev) + 1) < 0)
       fatal("setsockopt SO_BINDTODEVICE %s", dev);
+#else
+    fatal("SO_BINDTODEVICE not implemented on this platform");
+#endif
   }
   memset(&addr, 0, sizeof addr);
   addr.sin_family = AF_INET;
