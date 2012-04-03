@@ -48,6 +48,8 @@ int bindto(const char *dev) {
 int main(int argc, char **argv) {
   char buffer[4096];
   int fds[64];
+  if(argc < 2)
+    fatal("Usage: udplisten DEVICE [DEVICE...]");
   for(int n = 1; n < argc; ++n)
     fds[n] = bindto(argv[n]);
   for(;;) {
@@ -65,6 +67,7 @@ int main(int argc, char **argv) {
           fatal("recv (%s)", argv[n]);
         buffer[len] = 0;
         printf("%s: %s\n", argv[n], buffer);
+        fflush(stdout);
       }
     }
   }
