@@ -19,6 +19,7 @@ static void fatal(const char *s, ...) {
 }
 
 int main(int argc, char **argv) {
+  char *buffer;
   if(argc < 4 || argc > 5)
     fatal("usage: udpsend HOST PORT MESSAGE [REPEATS]");
   struct addrinfo hints, *res;
@@ -39,8 +40,10 @@ int main(int argc, char **argv) {
   int repeats = 1;
   if(argc > 4)
     repeats = atoi(argv[4]);
+  buffer = new char[strlen(argv[3]) + 10];
   for(int n = 0; n < repeats; ++n) {
-    if(sendto(fd, argv[3], strlen(argv[3]) + 1, 0,
+    sprintf(buffer, "%s %d", argv[3], n);
+    if(sendto(fd, buffer, strlen(buffer) + 1, 0,
 	      res->ai_addr, res->ai_addrlen) < 0)
       fatal("sendto[%d]", n);
   }
